@@ -57,11 +57,14 @@ public class Assignment5 extends AssignmentEndpoint {
     try (var connection = dataSource.getConnection()) {
       PreparedStatement statement =
           connection.prepareStatement(
-              "select password from challenge_users where userid = '"
-                  + username_login
-                  + "' and password = '"
-                  + password_login
-                  + "'");
+              "SELECT * FROM users WHERE user = :user AND pass = :pass";
+              try{
+                queryProducer
+                    .createNativeQuery(query)
+                    .setParameter("user", user)
+                    .setParameter("pass", pass)
+                    .getSingleResult();
+              }
       ResultSet resultSet = statement.executeQuery();
 
       if (resultSet.next()) {
